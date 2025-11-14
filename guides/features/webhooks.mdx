@@ -1,0 +1,218 @@
+---
+title: "Webhooks"
+description: "Using webhooks for real-time event notifications and system integrations"
+---
+
+## Webhook Overview
+
+Webhooks allow Freyavoice AI to send real-time event notifications to your systems. Instead of polling for updates, your systems can receive instant notifications when events occur, enabling real-time integrations and automated workflows.
+
+## How Webhooks Work
+
+### Event-Driven Architecture
+
+**Event Occurrence**: When an event occurs in Freyavoice AI (call started, call completed, error, etc.), a webhook is triggered.
+
+**HTTP POST**: Freyavoice AI sends an HTTP POST request to your configured webhook URL.
+
+**Payload Delivery**: The event data is included in the request body as JSON.
+
+**Your System Processing**: Your system receives the webhook, processes the event, and optionally returns a response.
+
+### Webhook Flow
+
+1. **Event Happens**: An event occurs in Freyavoice AI (e.g., call completes)
+2. **Webhook Triggered**: The webhook system identifies the event and prepares the payload
+3. **HTTP Request**: A POST request is sent to your webhook URL
+4. **Your System Receives**: Your endpoint receives and processes the webhook
+5. **Response**: Your system returns a response (usually 200 OK)
+6. **Retry Logic**: If delivery fails, Freyavoice AI retries according to configured policies
+
+## Available Webhook Events
+
+### Call Events
+
+**call.started**: Triggered when a call begins. Includes call ID, phone numbers, and initial context.
+
+**call.ended**: Triggered when a call completes. Includes call duration, outcome, and summary.
+
+**call.failed**: Triggered when a call fails to connect or errors occur. Includes error details.
+
+**call.transferred**: Triggered when a call is transferred to a human agent or external system.
+
+### Agent Events
+
+**agent.response**: Triggered when an agent generates a response. Includes the response text and metadata.
+
+**agent.function_called**: Triggered when an agent calls a function. Includes function name, parameters, and results.
+
+**agent.error**: Triggered when an agent encounters an error. Includes error details and context.
+
+### Workflow Events
+
+**workflow.started**: Triggered when a workflow begins execution.
+
+**workflow.node_executed**: Triggered when a workflow node completes. Includes node details and output.
+
+**workflow.completed**: Triggered when a workflow finishes. Includes final state and results.
+
+**workflow.error**: Triggered when a workflow encounters an error.
+
+### Campaign Events
+
+**campaign.started**: Triggered when a campaign begins.
+
+**campaign.call_completed**: Triggered when a campaign call completes. Includes call results.
+
+**campaign.completed**: Triggered when a campaign finishes. Includes final statistics.
+
+## Setting Up Webhooks
+
+### Webhook Configuration
+
+**URL**: Configure the endpoint URL where webhooks should be sent.
+
+**Events**: Select which events you want to receive.
+
+**Authentication**: Set up authentication (API key, signature verification, etc.).
+
+**Retry Policy**: Configure how webhooks should be retried on failure.
+
+### Webhook Security
+
+**Signature Verification**: Verify webhook signatures to ensure requests are authentic.
+
+**HTTPS Only**: Always use HTTPS endpoints to encrypt webhook data in transit.
+
+**IP Whitelisting**: Optionally whitelist Freyavoice AI IP addresses (if supported).
+
+**API Keys**: Use API keys or other authentication methods to secure endpoints.
+
+### Endpoint Requirements
+
+**HTTP POST**: Your endpoint must accept HTTP POST requests.
+
+**JSON Parsing**: Parse JSON payloads from webhook requests.
+
+**Response Handling**: Return appropriate HTTP status codes (200 for success).
+
+**Idempotency**: Handle duplicate webhooks gracefully (webhooks may be retried).
+
+## Webhook Payloads
+
+### Standard Structure
+
+Webhook payloads follow a consistent structure:
+
+```json
+{
+  "event": "call.ended",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "data": {
+    "call_id": "call_123",
+    "duration": 120,
+    "outcome": "success"
+  }
+}
+```
+
+### Event-Specific Data
+
+Each event type includes relevant data:
+
+**Call Events**: Include call IDs, phone numbers, duration, transcripts, etc.
+
+**Agent Events**: Include agent IDs, responses, function calls, etc.
+
+**Workflow Events**: Include workflow IDs, node execution details, etc.
+
+## Processing Webhooks
+
+### Receiving Webhooks
+
+**Endpoint Setup**: Create an HTTP endpoint to receive webhooks.
+
+**Request Parsing**: Parse the JSON payload from the request body.
+
+**Event Handling**: Route events to appropriate handlers based on event type.
+
+**Response**: Return 200 OK to acknowledge receipt.
+
+### Webhook Handlers
+
+**Event Routing**: Route different event types to appropriate handlers.
+
+**Data Processing**: Process event data and trigger actions in your system.
+
+**Error Handling**: Handle errors gracefully and log for debugging.
+
+**Async Processing**: Process webhooks asynchronously when possible to respond quickly.
+
+### Best Practices
+
+**Respond Quickly**: Return a response quickly (within a few seconds) to acknowledge receipt.
+
+**Process Asynchronously**: Do heavy processing asynchronously after responding.
+
+**Handle Duplicates**: Implement idempotency to handle duplicate webhooks.
+
+**Log Everything**: Log all webhook receipts and processing for debugging.
+
+## Use Cases
+
+### Real-Time Notifications
+
+**Slack Notifications**: Send notifications to Slack when important events occur.
+
+**Email Alerts**: Send email alerts for errors or important milestones.
+
+**Dashboard Updates**: Update dashboards in real-time as events occur.
+
+### System Integration
+
+**CRM Updates**: Update CRM systems when calls complete or important events occur.
+
+**Database Sync**: Sync data to your databases in real-time.
+
+**Workflow Triggers**: Trigger workflows in other systems based on Freyavoice AI events.
+
+### Analytics
+
+**Real-Time Analytics**: Feed events into analytics systems for real-time analysis.
+
+**Event Streaming**: Stream events to data pipelines for processing.
+
+**Monitoring**: Use webhooks for monitoring and alerting.
+
+## Troubleshooting
+
+### Common Issues
+
+**Webhooks Not Received**: Check URL configuration, firewall rules, and endpoint availability.
+
+**Authentication Failures**: Verify authentication configuration and credentials.
+
+**Timeout Errors**: Ensure endpoints respond quickly (within timeout limits).
+
+**Duplicate Webhooks**: Implement idempotency to handle retries gracefully.
+
+### Debugging
+
+**Webhook Logs**: Review webhook delivery logs in Freyavoice AI dashboard.
+
+**Endpoint Logs**: Check your endpoint logs for received webhooks.
+
+**Test Webhooks**: Use test webhooks to verify endpoint configuration.
+
+**Monitor Delivery**: Monitor webhook delivery success rates and retry patterns.
+
+## Next Steps
+
+<Card
+  title="Telephony Overview"
+  icon="phone"
+  href="/guides/telephony/overview"
+>
+  Learn about telephony systems, call handling, and voice configuration.
+</Card>
+

@@ -1,0 +1,173 @@
+---
+title: "Phone Numbers"
+description: "Managing phone numbers and connecting them to agents and workflows"
+---
+
+## Phone Number Overview
+
+Phone numbers are your connection point to the telephony network. They enable your agents and workflows to receive and make calls, connecting your AI applications to the real world.
+
+## Phone Number Types
+
+### Imported Numbers
+
+**From Twilio**: Import existing phone numbers from your Twilio account. This is the most common way to add phone numbers to Freya.
+
+**From Other Providers**: Import numbers from other telephony providers that Freya supports.
+
+**Number Validation**: Freya validates imported numbers to ensure they're active and accessible.
+
+### Purchased Numbers
+
+**Marketplace**: Purchase new phone numbers directly through Freya (if available in your region).
+
+**Number Selection**: Choose numbers based on area code, vanity numbers, or other criteria.
+
+**Instant Activation**: Purchased numbers are immediately available for use.
+
+## Phone Number Configuration
+
+### Basic Information
+
+**Phone Number**: The actual phone number (e.g., +1234567890). This is usually set automatically when importing.
+
+**Friendly Name**: A descriptive name for the number (e.g., "Main Support Line", "Sales Hotline"). This helps identify numbers in your dashboard.
+
+**Capabilities**: Configure what the number can do:
+- **Voice**: Enable voice calling (inbound, outbound, or bidirectional)
+- **SMS**: Enable SMS messaging
+- **MMS**: Enable MMS messaging (if supported)
+- **Fax**: Enable fax capabilities (if supported)
+
+### Routing Configuration
+
+**Configuration Type**: Choose how to route calls:
+- **Agents**: Route directly to specific agents
+- **Workflows**: Route through workflows for complex logic
+
+**Inbound Routing**: Configure how inbound calls are handled:
+- **Inbound Agent**: Which agent handles incoming calls
+- **Inbound Workflow**: Which workflow processes incoming calls
+
+**Outbound Routing**: Configure how outbound calls are initiated:
+- **Outbound Agent**: Which agent is used for outbound calls
+- **Outbound Workflow**: Which workflow handles outbound calls
+
+### Advanced Settings
+
+**Voice Configuration**: Configure voice-specific settings like codecs, quality, and routing.
+
+**Messaging Configuration**: Set up webhooks and endpoints for SMS/MMS handling.
+
+**Emergency Calls**: Configure emergency call handling if required by regulations.
+
+## Phone Number Management
+
+### Organization
+
+**Grouping**: Organize phone numbers by purpose, department, or campaign.
+
+**Naming Convention**: Use consistent naming conventions to easily identify numbers.
+
+**Tagging**: Add tags to numbers for easier filtering and organization.
+
+### Monitoring
+
+**Usage Tracking**: Monitor call volume, duration, and patterns per number.
+
+**Cost Tracking**: Track costs associated with each number.
+
+**Quality Metrics**: Monitor call quality, drop rates, and connection success.
+
+### Maintenance
+
+**Regular Review**: Periodically review numbers to identify unused or underutilized ones.
+
+**Configuration Updates**: Update routing configurations as your needs change.
+
+**Provider Management**: Manage relationships with telephony providers.
+
+## Best Practices
+
+### Number Strategy
+
+**Purpose-Driven**: Assign numbers based on clear purposes. Don't create numbers without a specific use case.
+
+**Scalability**: Plan your number strategy to scale as your business grows.
+
+**Cost Optimization**: Monitor costs and optimize number usage to control expenses.
+
+**Compliance**: Ensure numbers comply with local regulations and requirements.
+
+### Routing Design
+
+**Start Simple**: Begin with simple agent routing, then upgrade to workflows as needs become more complex.
+
+**Test Routing**: Always test routing configurations before going live.
+
+**Monitor Performance**: Track which routing configurations perform best.
+
+**Iterate**: Continuously improve routing based on call data and feedback.
+
+### Number Lifecycle
+
+**Acquisition**: Acquire numbers strategically based on your needs and budget.
+
+**Configuration**: Configure numbers properly from the start to avoid issues.
+
+**Monitoring**: Continuously monitor number performance and usage.
+
+**Optimization**: Optimize number usage based on data and feedback.
+
+**Retirement**: Properly retire or transfer numbers when no longer needed.
+
+## Integration with Agents and Workflows
+
+### Agent Integration
+
+**Direct Connection**: Connect numbers directly to agents for simple use cases.
+
+**Multiple Agents**: Use different numbers for different agents or purposes.
+
+**Agent Switching**: Switch agents on a number as your needs evolve.
+
+### Workflow Integration
+
+**Complex Routing**: Use workflows when you need complex routing logic.
+
+**Multi-Agent Workflows**: Workflows can route to different agents based on conditions.
+
+**Dynamic Routing**: Workflows enable dynamic routing based on real-time conditions.
+
+## Troubleshooting
+
+### Common Issues
+
+**Calls Not Connecting**: Check number status, provider connection, and routing configuration.
+
+**Poor Audio Quality**: Verify network connectivity, codec settings, and provider quality.
+
+**Routing Problems**: Review routing configuration and test with simulations.
+
+**Cost Issues**: Monitor usage and optimize number allocation.
+
+### Debugging
+
+**Call Logs**: Review call logs to identify issues.
+
+**Provider Logs**: Check provider-side logs for telephony issues.
+
+**Configuration Review**: Verify all configuration settings are correct.
+
+**Test Calls**: Make test calls to verify everything works.
+
+## Next Steps
+
+<Card
+  title="Integrations"
+  icon="puzzle-piece"
+  href="/guides/fundamentals/integrations"
+>
+  Learn how to integrate Freyavoice AI with external systems and services.
+</Card>
+

@@ -11,7 +11,7 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Getting Started",
         "groups": [
           {
             "group": "Introduction",
@@ -22,15 +22,60 @@
           {
             "group": "Basic Operations",
             "pages": [
-              "basic-operations/creating-workspace",
-              "basic-operations/configuring-workspace",
-              "basic-operations/creating-agent",
-              "basic-operations/creating-workflow",
-              "basic-operations/iterating-agents",
-              "basic-operations/import-phone-number",
-              "basic-operations/connect-phone-number",
-              "basic-operations/receiving-inbound-calls",
-              "basic-operations/initiating-outbound-calls"
+              "getting-started/creating-workspace",
+              "getting-started/configuring-workspace",
+              "getting-started/creating-agent",
+              "getting-started/creating-workflow",
+              "getting-started/iterating-agents",
+              "getting-started/import-phone-number",
+              "getting-started/connect-phone-number",
+              "getting-started/receiving-inbound-calls",
+              "getting-started/initiating-outbound-calls"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Learning Freyavoice AI",
+            "pages": [
+              "guides/learning-freyavoice-ai/overview",
+              "guides/learning-freyavoice-ai/core-concepts",
+              "guides/learning-freyavoice-ai/architecture",
+              "guides/learning-freyavoice-ai/best-practices"
+            ]
+          },
+          {
+            "group": "Fundamentals",
+            "pages": [
+              "guides/fundamentals/workspaces",
+              "guides/fundamentals/agents",
+              "guides/fundamentals/workflows",
+              "guides/fundamentals/phone-numbers",
+              "guides/fundamentals/integrations"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "guides/features/ai-studio",
+              "guides/features/simulations",
+              "guides/features/analytics",
+              "guides/features/campaigns",
+              "guides/features/webhooks"
+            ]
+          },
+          {
+            "group": "Telephony",
+            "pages": [
+              "guides/telephony/overview",
+              "guides/telephony/inbound-calls",
+              "guides/telephony/outbound-calls",
+              "guides/telephony/phone-number-management",
+              "guides/telephony/call-routing",
+              "guides/telephony/voice-configuration"
             ]
           }
         ]
