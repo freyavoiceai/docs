@@ -59,24 +59,6 @@
         },
         "security": [{"bearerAuth": []}]
       },
-      "post": {
-        "summary": "Initiate outbound call",
-        "description": "Triggers an outbound call via FreeSWITCH.",
-        "tags": ["Calls"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {"schema": {"$ref": "#/components/schemas/PostCallRequest"}}
-          }
-        },
-        "responses": {
-          "200": {"description": "Call initiation accepted", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/PostCallResponse"}}}},
-          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
-          "503": {"description": "FreeSWITCH unavailable"},
-          "500": {"description": "Server error"}
-        },
-        "security": [{"bearerAuth": []}]
-      },
       "delete": {
         "summary": "Bulk delete calls",
         "tags": ["Calls"],
