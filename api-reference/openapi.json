@@ -1,209 +1,547 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "Freyavoice API",
+    "version": "2.0.0",
+    "description": "Production endpoints for managing calls under /api/v2/call. All endpoints require a bearer token issued by Freyavoice.",
+    "contact": {
+      "name": "Freyavoice Support",
+      "email": "support@freyavoice.com"
+    }
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
+      "url": "https://app2.freyavoice.ai/api/v2",
+      "description": "Production"
     }
   ],
   "paths": {
-    "/plants": {
+    "/call": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "summary": "List calls",
+        "description": "Returns paginated calls for a workspace with optional filters, sorting, and export options.",
+        "tags": ["Calls"],
         "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}, "description": "Workspace identifier"},
+          {"name": "limit", "in": "query", "schema": {"type": "integer", "default": 20, "maximum": 1000}, "description": "Page size (defaults to 20)"},
+          {"name": "offset", "in": "query", "schema": {"type": "integer", "default": 0}, "description": "Offset for pagination"},
+          {"name": "sortBy", "in": "query", "schema": {"type": "string", "enum": ["startedAt", "duration", "sentiment", "relativeTime"]}, "description": "Sort field"},
+          {"name": "sortOrder", "in": "query", "schema": {"type": "string", "enum": ["asc", "desc"], "default": "desc"}},
+          {"name": "callIds", "in": "query", "schema": {"type": "string"}, "description": "Comma-separated list of call IDs"},
+          {"name": "startDate", "in": "query", "schema": {"type": "string", "format": "date-time"}, "description": "Filter calls starting at or after this ISO timestamp"},
+          {"name": "endDate", "in": "query", "schema": {"type": "string", "format": "date-time"}, "description": "Filter calls starting before this ISO timestamp"},
+          {"name": "phoneNumberId", "in": "query", "schema": {"type": "string"}},
+          {"name": "customerNumber", "in": "query", "schema": {"type": "string"}},
+          {"name": "campaignId", "in": "query", "schema": {"type": "string"}},
+          {"name": "searchTerm", "in": "query", "schema": {"type": "string"}, "description": "Free text search"},
+          {"name": "status", "in": "query", "schema": {"type": "string"}},
+          {"name": "type", "in": "query", "schema": {"type": "string"}},
+          {"name": "endedReason", "in": "query", "schema": {"type": "string"}},
+          {"name": "filters", "in": "query", "schema": {"type": "string"}, "description": "Base64-encoded filter state"},
+          {"name": "includeStatusCounts", "in": "query", "schema": {"type": "string"}, "description": "Set to 'false' to skip status aggregation"},
+          {"name": "export", "in": "query", "schema": {"type": "string"}, "description": "Set to 'true' to return a file export"},
+          {"name": "exportFormat", "in": "query", "schema": {"type": "string", "enum": ["csv", "xlsx", "markdown"], "default": "csv"}},
+          {"name": "exportColumns", "in": "query", "schema": {"type": "string"}, "description": "JSON array of column definitions {id,label}"},
+          {"name": "additionalData", "in": "query", "schema": {"type": "string"}, "description": "Comma-separated extras: transcript,cxInsights"}
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "Calls and pagination metadata",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
+                "schema": {"$ref": "#/components/schemas/CallsResponse"}
               }
             }
           },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
       },
       "post": {
-        "description": "Creates a new plant in the store",
+        "summary": "Initiate outbound call",
+        "description": "Triggers an outbound call via FreeSWITCH.",
+        "tags": ["Calls"],
         "requestBody": {
-          "description": "Plant to add to the store",
+          "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
+            "application/json": {"schema": {"$ref": "#/components/schemas/PostCallRequest"}}
+          }
         },
         "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/plants/{id}": {
+          "200": {"description": "Call initiation accepted", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/PostCallResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "503": {"description": "FreeSWITCH unavailable"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      },
       "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+        "summary": "Bulk delete calls",
+        "tags": ["Calls"],
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}},
+          {"name": "callIds", "in": "query", "required": true, "schema": {"type": "string"}, "description": "Comma-separated call IDs"}
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          }
+          "200": {"description": "Deletion result", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/DeleteCallsResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "500": {"description": "Server error"}
         },
+        "security": [{"bearerAuth": []}]
+      }
+    },
+    "/call/overview": {
+      "get": {
+        "summary": "Call overview stats",
+        "description": "Returns aggregated counts for transferred, successful, and failed calls in a workspace.",
+        "tags": ["Calls"],
+        "parameters": [
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}},
+          {"name": "startDate", "in": "query", "schema": {"type": "string", "format": "date-time"}},
+          {"name": "endDate", "in": "query", "schema": {"type": "string", "format": "date-time"}},
+          {"name": "filters", "in": "query", "schema": {"type": "string"}, "description": "Base64-encoded filter state"}
+        ],
         "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        }
+          "200": {"description": "Overview counts", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CallOverviewResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      }
+    },
+    "/call/{callId}": {
+      "get": {
+        "summary": "Get call details",
+        "description": "Returns the full call record including transcript, analysis, tags, feedback, and problems.",
+        "tags": ["Calls"],
+        "parameters": [
+          {"name": "callId", "in": "path", "required": true, "schema": {"type": "string"}},
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {"description": "Call details", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CallDetailsResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "404": {"description": "Call not found"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      }
+    },
+    "/call/{callId}/tags": {
+      "post": {
+        "summary": "Add call tag",
+        "tags": ["Call Tags"],
+        "parameters": [{"name": "callId", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/AddTagRequest"}}}},
+        "responses": {
+          "200": {"description": "Created tag", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/TagResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "404": {"description": "Call not found"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "patch": {
+        "summary": "Upsert or delete tag",
+        "tags": ["Call Tags"],
+        "parameters": [{"name": "callId", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/PatchTagRequest"}}}},
+        "responses": {
+          "200": {"description": "Updated tag", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/TagResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "404": {"description": "Call not found"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "delete": {
+        "summary": "Remove call tag",
+        "tags": ["Call Tags"],
+        "parameters": [
+          {"name": "callId", "in": "path", "required": true, "schema": {"type": "string"}},
+          {"name": "tag", "in": "query", "required": true, "schema": {"type": "string"}},
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {"description": "Deletion result", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/DeleteMessage"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "404": {"description": "Call not found"}
+        },
+        "security": [{"bearerAuth": []}]
+      }
+    },
+    "/call/{callId}/problems": {
+      "get": {
+        "summary": "List call problems",
+        "tags": ["Call Problems"],
+        "parameters": [
+          {"name": "callId", "in": "path", "required": true, "schema": {"type": "string"}},
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {"description": "Problems for the call", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ProblemsResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "404": {"description": "Call not found"}
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "post": {
+        "summary": "Add call problem",
+        "tags": ["Call Problems"],
+        "parameters": [{"name": "callId", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/AddProblemRequest"}}}},
+        "responses": {
+          "200": {"description": "Created problem", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ProblemResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "404": {"description": "Call not found"}
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "patch": {
+        "summary": "Update call problem",
+        "tags": ["Call Problems"],
+        "parameters": [{"name": "callId", "in": "path", "required": true, "schema": {"type": "string"}}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/PatchProblemRequest"}}}},
+        "responses": {
+          "200": {"description": "Updated problem", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ProblemResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "404": {"description": "Call not found or problem missing"}
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "delete": {
+        "summary": "Remove call problem",
+        "tags": ["Call Problems"],
+        "parameters": [
+          {"name": "callId", "in": "path", "required": true, "schema": {"type": "string"}},
+          {"name": "problemId", "in": "query", "required": true, "schema": {"type": "string"}},
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {"description": "Deletion result", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/DeleteMessage"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "404": {"description": "Call not found"}
+        },
+        "security": [{"bearerAuth": []}]
+      }
+    },
+    "/call/{callId}/recording": {
+      "get": {
+        "summary": "Download call recording",
+        "tags": ["Call Recordings"],
+        "parameters": [
+          {"name": "callId", "in": "path", "required": true, "schema": {"type": "string"}},
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {"description": "MP3 audio stream", "content": {"audio/mpeg": {"schema": {"type": "string", "format": "binary"}}}},
+          "400": {"description": "Invalid request", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "403": {"description": "Access denied"},
+          "404": {"description": "Recording not found"}
+        },
+        "security": [{"bearerAuth": []}]
       }
     }
   },
   "components": {
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "Pagination": {
         "type": "object",
         "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
+          "total": {"type": "integer"},
+          "limit": {"type": "integer"},
+          "offset": {"type": "integer"},
+          "hasNext": {"type": "boolean"},
+          "hasPrevious": {"type": "boolean"}
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
+      "StatusCounts": {
+        "type": "object",
+        "properties": {
+          "all": {"type": "integer"},
+          "transferred": {"type": "integer"},
+          "successful": {"type": "integer"},
+          "failed": {"type": "integer"}
+        }
+      },
+      "CustomerIdentity": {
+        "type": "object",
+        "properties": {
+          "firstName": {"type": "string"},
+          "lastName": {"type": "string"},
+          "email": {"type": "string"}
+        }
+      },
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "number": {"type": "string", "nullable": true},
+          "identity": {"$ref": "#/components/schemas/CustomerIdentity"}
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "role": {"type": "string"},
+          "message": {"type": "string"},
+          "duration": {"type": "number"},
+          "secondsFromStart": {"type": "number"},
+          "timestamp": {"type": "string"},
+          "endTime": {"type": "number"}
+        }
+      },
+      "CallTag": {
+        "type": "object",
+        "properties": {
+          "tag": {"type": "string"},
+          "source": {"type": "string"},
+          "value": {"type": "number", "nullable": true},
+          "confidence": {"type": "number", "format": "float", "minimum": 0, "maximum": 1, "nullable": true},
+          "metadata": {"type": "object", "additionalProperties": true, "nullable": true}
+        },
+        "required": ["tag", "source"]
+      },
+      "CallFeedback": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "callId": {"type": "string"},
+          "workspaceId": {"type": "string"},
+          "reviewerId": {"type": "string", "nullable": true},
+          "reviewerEmail": {"type": "string", "nullable": true},
+          "timestamp": {"type": "string"},
+          "rating": {"type": "number", "minimum": 1, "maximum": 5},
+          "text": {"type": "string", "nullable": true},
+          "status": {"type": "string", "enum": ["backlog", "in-progress", "completed"]},
+          "createdAt": {"type": "string"},
+          "updatedAt": {"type": "string"}
+        }
+      },
+      "CallProblem": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "callId": {"type": "string"},
+          "problem": {"type": "string"},
+          "description": {"type": "string", "nullable": true},
+          "type": {"type": "string", "enum": ["system", "audio", "transcription", "decision", "general"], "nullable": true},
+          "severity": {"type": "number", "minimum": 0, "maximum": 1},
+          "status": {"type": "string"},
+          "assignedTo": {"type": "string", "nullable": true},
+          "createdBy": {"type": "string"},
+          "messageId": {"type": "string", "nullable": true},
+          "resolved": {"type": "boolean"},
+          "resolvedAt": {"type": "string", "nullable": true},
+          "resolvedBy": {"type": "string", "nullable": true},
+          "solutionId": {"type": "string", "nullable": true},
+          "createdAt": {"type": "string"},
+          "updatedAt": {"type": "string"}
+        }
+      },
+      "Call": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "assistantId": {"type": "string", "nullable": true},
+          "assistantName": {"type": "string", "nullable": true},
+          "workflowId": {"type": "string", "nullable": true},
+          "workflowName": {"type": "string", "nullable": true},
+          "workspaceId": {"type": "string"},
+          "phoneNumberId": {"type": "string", "nullable": true},
+          "phoneNumber": {"type": "string", "nullable": true},
+          "simulationId": {"type": "string", "nullable": true},
+          "campaign": {
             "type": "object",
             "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
+              "id": {"type": "string"},
+              "name": {"type": "string"}
+            },
+            "nullable": true
+          },
+          "customerNumber": {"type": "string", "nullable": true},
+          "startedAt": {"type": "string", "nullable": true},
+          "endedAt": {"type": "string", "nullable": true},
+          "duration": {"type": "number", "nullable": true},
+          "status": {"type": "string", "nullable": true},
+          "type": {"type": "string", "nullable": true},
+          "endedReason": {"type": "string", "nullable": true},
+          "transcript": {"type": "string", "nullable": true},
+          "messages": {"type": "array", "items": {"$ref": "#/components/schemas/Message"}, "nullable": true},
+          "summary": {"type": "string", "nullable": true},
+          "cost": {"type": "number", "nullable": true},
+          "recordingUrl": {"type": "string", "nullable": true},
+          "tags": {"type": "array", "items": {"$ref": "#/components/schemas/CallTag"}},
+          "customer": {"$ref": "#/components/schemas/Customer"},
+          "unresolvedProblemsCount": {"type": "integer"},
+          "resolvedProblemsCount": {"type": "integer"}
+        }
+      },
+      "CallDetails": {
+        "allOf": [
+          {"$ref": "#/components/schemas/Call"},
+          {
+            "type": "object",
+            "properties": {
+              "analysis": {"type": "object", "nullable": true, "additionalProperties": true},
+              "createdAt": {"type": "string", "nullable": true},
+              "updatedAt": {"type": "string", "nullable": true},
+              "campaign": {
+                "type": "object",
+                "properties": {"id": {"type": "string"}, "name": {"type": "string"}},
+                "nullable": true
+              },
+              "artifact": {"type": "object", "nullable": true},
+              "feedbacks": {"type": "array", "items": {"$ref": "#/components/schemas/CallFeedback"}},
+              "logs": {"type": "array", "items": {"type": "object"}},
+              "problems": {"type": "array", "items": {"$ref": "#/components/schemas/CallProblem"}}
             }
           }
         ]
       },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+      "CallsResponse": {
         "type": "object",
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
+          "calls": {"type": "array", "items": {"$ref": "#/components/schemas/Call"}},
+          "pagination": {"$ref": "#/components/schemas/Pagination"},
+          "statusCounts": {"$ref": "#/components/schemas/StatusCounts"}
+        }
+      },
+      "CallDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "call": {"$ref": "#/components/schemas/CallDetails"}
+        }
+      },
+      "PostCallRequest": {
+        "type": "object",
+        "properties": {
+          "dest": {"type": "string", "description": "Destination phone number"},
+          "from": {"type": "string", "description": "Caller ID phone number"},
+          "agentExt": {"type": "string", "description": "Optional agent extension"},
+          "gateway": {"type": "string", "description": "FusionPBX gateway (required when agentExt is not provided)"}
+        },
+        "required": ["dest", "from", "gateway"]
+      },
+      "PostCallResponse": {
+        "type": "object",
+        "properties": {
+          "job_uuid": {"type": "string"},
+          "success": {"type": "boolean"},
+          "message": {"type": "string"}
+        }
+      },
+      "DeleteCallsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "deletedCount": {"type": "integer"}
+        }
+      },
+      "CallOverviewResponse": {
+        "type": "object",
+        "properties": {
+          "transferred": {"type": "integer"},
+          "successful": {"type": "integer"},
+          "failed": {"type": "integer"},
+          "total": {"type": "integer"}
+        }
+      },
+      "AddTagRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {"type": "string"},
+          "tag": {"type": "string"},
+          "source": {"type": "string", "default": "user"},
+          "value": {"type": "number"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "metadata": {"type": "object", "additionalProperties": true, "nullable": true}
+        },
+        "required": ["workspaceId", "tag", "source"]
+      },
+      "PatchTagRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {"type": "string"},
+          "tag": {"type": "string"},
+          "source": {"type": "string", "default": "user"},
+          "value": {"type": "number", "nullable": true},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1, "nullable": true},
+          "metadata": {"type": "object", "additionalProperties": true, "nullable": true},
+          "delete": {"type": "boolean"}
+        },
+        "required": ["workspaceId", "tag", "source"]
+      },
+      "TagResponse": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "tag": {"$ref": "#/components/schemas/CallTag"},
+          "message": {"type": "string"}
+        }
+      },
+      "AddProblemRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {"type": "string"},
+          "problem": {"type": "string"},
+          "description": {"type": "string"},
+          "type": {"type": "string", "enum": ["system", "audio", "transcription", "decision", "general"]},
+          "severity": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.5},
+          "status": {"type": "string", "default": "open"},
+          "assignedTo": {"type": "string"},
+          "messageId": {"type": "string"},
+          "resolved": {"type": "boolean", "default": false}
+        },
+        "required": ["workspaceId", "problem"]
+      },
+      "PatchProblemRequest": {
+        "type": "object",
+        "properties": {
+          "workspaceId": {"type": "string"},
+          "problemId": {"type": "string"},
+          "resolved": {"type": "boolean"},
+          "status": {"type": "string"},
+          "assignedTo": {"type": "string", "nullable": true},
+          "resolvedBy": {"type": "string"},
+          "problem": {"type": "string"},
+          "description": {"type": "string", "nullable": true},
+          "type": {"type": "string", "enum": ["system", "audio", "transcription", "decision", "general"], "nullable": true},
+          "severity": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "required": ["workspaceId", "problemId"]
+      },
+      "ProblemResponse": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "problem": {"$ref": "#/components/schemas/CallProblem"},
+          "message": {"type": "string"}
+        }
+      },
+      "ProblemsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "problems": {"type": "array", "items": {"$ref": "#/components/schemas/CallProblem"}}
+        }
+      },
+      "DeleteMessage": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "message": {"type": "string"}
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {"type": "string"},
+          "message": {"type": "string"}
         }
       }
     },

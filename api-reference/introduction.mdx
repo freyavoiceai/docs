@@ -1,28 +1,32 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Freyavoice v2 Call API overview'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Overview
 
-## Welcome
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+The Freyavoice Call API under `/api/v2/call` powers call search, details, recordings, tags, and problems. The Mintlify API playground below is generated from our OpenAPI spec.
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="OpenAPI: Call endpoints"
+  icon="phone"
+  href="/api-reference/openapi.json"
 >
-  View the OpenAPI specification file
+  Browse the full schema for calls, tags, problems, recordings, and stats.
 </Card>
+
+## Key endpoints
+
+- List calls: `GET /call` (filters, pagination, export)
+- Call details: `GET /call/{callId}` (transcript, analysis, feedback, tags, problems)
+- Tags: `POST|PATCH|DELETE /call/{callId}/tags`
+- Problems: `GET|POST|PATCH|DELETE /call/{callId}/problems`
+- Recording: `GET|POST /call/{callId}/recording`
+- Overview metrics: `GET /call/overview`
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All endpoints require a bearer token issued by Freyavoice. In OpenAPI this is represented as:
 
 ```json
 "security": [

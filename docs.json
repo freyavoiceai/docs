@@ -82,20 +82,12 @@
       },
       {
         "tab": "API reference",
+        "openapi": "api-reference/openapi.json",
         "groups": [
           {
             "group": "API documentation",
             "pages": [
               "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
             ]
           }
         ]
@@ -112,8 +104,8 @@
     }
   },
   "logo": {
-    "light": "/freyavoice_cover.jpeg",
-    "dark": "/freyavoice_cover.jpeg"
+    "light": "/freyavoice_cover.png",
+    "dark": "/freyavoice_cover.png"
   },
   "navbar": {
     "links": [
@@ -130,15 +122,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
