@@ -15,23 +15,10 @@ The Freyavoice Call API under `/api/v2/call` powers call search, details, record
   Browse the full schema for calls, tags, problems, recordings, and stats.
 </Card>
 
-## Key endpoints
-
-- List calls: `GET /call` (filters, pagination, export)
-- Call details: `GET /call/{callId}` (transcript, analysis, feedback, tags, problems)
-- Tags: `POST|PATCH|DELETE /call/{callId}/tags`
-- Problems: `GET|POST|PATCH|DELETE /call/{callId}/problems`
-- Recording: `GET|POST /call/{callId}/recording`
-- Overview metrics: `GET /call/overview`
+<Note>
+  Please note that this REST interface is still experimental and the definitions may change without immediate notice. We welcome all inquiries on slack for support.
+</Note>
 
 ## Authentication
 
-All endpoints require a bearer token issued by Freyavoice. In OpenAPI this is represented as:
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+All endpoints require a bearer token issued by the workspace.
