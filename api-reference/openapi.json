@@ -246,6 +246,129 @@
         },
         "security": [{"bearerAuth": []}]
       }
+    },
+    "/campaign": {
+      "get": {
+        "summary": "List campaigns",
+        "description": "Returns campaigns for a workspace with filters, sorting, pagination, and export support.",
+        "tags": ["Campaigns"],
+        "parameters": [
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}, "description": "Workspace identifier"},
+          {"name": "limit", "in": "query", "schema": {"type": "integer", "default": 25, "maximum": 1000}},
+          {"name": "offset", "in": "query", "schema": {"type": "integer", "default": 0}},
+          {"name": "filters", "in": "query", "schema": {"type": "string"}, "description": "Base64-encoded filter state"},
+          {"name": "search", "in": "query", "schema": {"type": "string"}, "description": "Global search across name and description"},
+          {"name": "sortBy", "in": "query", "schema": {"type": "string"}},
+          {"name": "sortOrder", "in": "query", "schema": {"type": "string", "enum": ["asc", "desc"]}},
+          {"name": "export", "in": "query", "schema": {"type": "string"}, "description": "Set to 'true' to export"},
+          {"name": "exportFormat", "in": "query", "schema": {"type": "string", "enum": ["csv", "xlsx", "markdown"], "default": "csv"}},
+          {"name": "exportColumns", "in": "query", "schema": {"type": "string"}, "description": "JSON array of column definitions {id,label}"}
+        ],
+        "responses": {
+          "200": {"description": "Campaigns with pagination and status counts", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CampaignListResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "post": {
+        "summary": "Create campaign",
+        "description": "Creates an outbound voice campaign and schedules calls to the provided customers.",
+        "tags": ["Campaigns"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {"schema": {"$ref": "#/components/schemas/PostCampaignRequest"}}
+          }
+        },
+        "responses": {
+          "200": {"description": "Campaign created", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CampaignResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "404": {"description": "Phone number or assistant not found"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "delete": {
+        "summary": "Bulk delete campaigns",
+        "tags": ["Campaigns"],
+        "parameters": [
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}},
+          {"name": "campaignIds", "in": "query", "required": true, "schema": {"type": "string"}, "description": "Comma-separated campaign IDs"}
+        ],
+        "responses": {
+          "200": {"description": "Deletion result", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/DeleteCampaignsResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      }
+    },
+    "/campaign/{campaignId}": {
+      "get": {
+        "summary": "Get campaign",
+        "description": "Returns campaign configuration, customers, events, and call IDs.",
+        "tags": ["Campaigns"],
+        "parameters": [
+          {"name": "campaignId", "in": "path", "required": true, "schema": {"type": "string"}},
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {"description": "Campaign details", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CampaignDetailsResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "404": {"description": "Campaign not found"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      },
+      "delete": {
+        "summary": "Delete campaign",
+        "tags": ["Campaigns"],
+        "parameters": [
+          {"name": "campaignId", "in": "path", "required": true, "schema": {"type": "string"}},
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {"description": "Deletion result", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/DeleteCampaignResponse"}}}},
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "404": {"description": "Campaign not found"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      }
+    },
+    "/campaign/{campaignId}/customers": {
+      "get": {
+        "summary": "List campaign customers",
+        "description": "Returns customers for a campaign with retry status, property keys, pagination, and exports.",
+        "tags": ["Campaign Customers"],
+        "parameters": [
+          {"name": "campaignId", "in": "path", "required": true, "schema": {"type": "string"}},
+          {"name": "workspaceId", "in": "query", "required": true, "schema": {"type": "string"}},
+          {"name": "limit", "in": "query", "schema": {"type": "integer", "default": 25, "maximum": 500}},
+          {"name": "offset", "in": "query", "schema": {"type": "integer", "default": 0}},
+          {"name": "filters", "in": "query", "schema": {"type": "string"}, "description": "Base64-encoded filter state"},
+          {"name": "search", "in": "query", "schema": {"type": "string"}, "description": "Search across phoneNumber and properties"},
+          {"name": "sortBy", "in": "query", "schema": {"type": "string"}},
+          {"name": "sortOrder", "in": "query", "schema": {"type": "string", "enum": ["asc", "desc"]}},
+          {"name": "export", "in": "query", "schema": {"type": "string"}, "description": "Set to 'true' to export"},
+          {"name": "exportFormat", "in": "query", "schema": {"type": "string", "enum": ["csv", "xlsx", "markdown"], "default": "csv"}},
+          {"name": "exportColumns", "in": "query", "schema": {"type": "string"}, "description": "JSON array of column definitions {id,label}"}
+        ],
+        "responses": {
+          "200": {"description": "Customers with pagination", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CampaignCustomersResponse"}}}},
+          "400": {"description": "Validation or export error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "404": {"description": "Campaign not found"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      }
     }
   },
   "components": {
@@ -536,6 +659,180 @@
           "success": {"type": "boolean"},
           "message": {"type": "string"}
         }
+      },
+      "CampaignEvent": {
+        "type": "object",
+        "properties": {
+          "event": {"type": "string"},
+          "message": {"type": "string"},
+          "metadata": {"type": "object", "additionalProperties": true},
+          "timestamp": {"type": "string", "format": "date-time"}
+        }
+      },
+      "RetryAttempt": {
+        "type": "object",
+        "properties": {
+          "attempts": {"type": "integer"},
+          "lastAttemptAt": {"type": "string", "format": "date-time", "nullable": true},
+          "nextRetryAt": {"type": "string", "format": "date-time", "nullable": true},
+          "status": {"type": "string", "enum": ["pending", "retrying", "completed", "failed", "exhausted"]},
+          "callIds": {"type": "array", "items": {"type": "string"}},
+          "currentAlternativeIndex": {"type": "integer"}
+        }
+      },
+      "CampaignCustomer": {
+        "type": "object",
+        "properties": {
+          "phoneNumber": {"type": "string"},
+          "properties": {"type": "object", "additionalProperties": true}
+        },
+        "required": ["phoneNumber"]
+      },
+      "RetryStatus": {
+        "type": "object",
+        "properties": {
+          "status": {"type": "string", "enum": ["pending", "retrying", "completed", "failed", "exhausted"], "nullable": true},
+          "attempts": {"type": "integer"},
+          "lastAttemptAt": {"type": "string", "format": "date-time", "nullable": true},
+          "nextRetryAt": {"type": "string", "format": "date-time", "nullable": true},
+          "callIds": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "CampaignCustomerRow": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "phoneNumber": {"type": "string"},
+          "properties": {"type": "object", "additionalProperties": true, "nullable": true},
+          "retryStatus": {"$ref": "#/components/schemas/RetryStatus"},
+          "callCount": {"type": "integer"},
+          "createdAt": {"type": "string"}
+        }
+      },
+      "CampaignCustomersResponse": {
+        "type": "object",
+        "properties": {
+          "customers": {"type": "array", "items": {"$ref": "#/components/schemas/CampaignCustomerRow"}},
+          "propertyKeys": {"type": "array", "items": {"type": "string"}},
+          "pagination": {"$ref": "#/components/schemas/Pagination"},
+          "statusCounts": {"type": "object", "additionalProperties": {"type": "integer"}}
+        }
+      },
+      "CampaignStatusCounts": {
+        "type": "object",
+        "properties": {
+          "all": {"type": "integer"},
+          "active": {"type": "integer"},
+          "scheduled": {"type": "integer"},
+          "completed": {"type": "integer"},
+          "draft": {"type": "integer"}
+        }
+      },
+      "Campaign": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "assistantId": {"type": "string", "nullable": true},
+          "phoneNumberId": {"type": "string", "nullable": true},
+          "name": {"type": "string"},
+          "description": {"type": "string", "nullable": true},
+          "campaignType": {"type": "string", "nullable": true},
+          "isActive": {"type": "boolean"},
+          "earliestAt": {"type": "string", "format": "date-time", "nullable": true},
+          "latestAt": {"type": "string", "format": "date-time", "nullable": true},
+          "activeDays": {"type": "array", "items": {"type": "integer"}},
+          "phoneNumber": {"type": "string", "nullable": true},
+          "callRetries": {"type": "integer"},
+          "webhookUrl": {"type": "string", "nullable": true},
+          "voicemailDetection": {"type": "boolean"},
+          "voicemailPrompt": {"type": "string", "nullable": true},
+          "voicemailMessage": {"type": "string", "nullable": true},
+          "isCommercial": {"type": "boolean", "nullable": true},
+          "customers": {"type": "array", "items": {"$ref": "#/components/schemas/CampaignCustomer"}},
+          "callIds": {"type": "array", "items": {"type": "string"}},
+          "roomNames": {"type": "array", "items": {"type": "string"}},
+          "retryAttempts": {"type": "object", "additionalProperties": {"$ref": "#/components/schemas/RetryAttempt"}},
+          "events": {"type": "array", "items": {"$ref": "#/components/schemas/CampaignEvent"}},
+          "version": {"type": "string", "enum": ["v1", "v2"]},
+          "workspaceId": {"type": "string"},
+          "createdAt": {"type": "string"},
+          "updatedAt": {"type": "string"}
+        }
+      },
+      "CampaignListItem": {
+        "allOf": [
+          {"$ref": "#/components/schemas/Campaign"},
+          {"type": "object", "properties": {
+            "status": {"type": "string", "enum": ["active", "scheduled", "completed", "draft"]},
+            "customerCount": {"type": "integer"},
+            "callCount": {"type": "integer"}
+          }}
+        ]
+      },
+      "CampaignListResponse": {
+        "type": "object",
+        "properties": {
+          "campaigns": {"type": "array", "items": {"$ref": "#/components/schemas/CampaignListItem"}},
+          "pagination": {"$ref": "#/components/schemas/Pagination"},
+          "statusCounts": {"$ref": "#/components/schemas/CampaignStatusCounts"}
+        }
+      },
+      "CampaignResponse": {
+        "type": "object",
+        "properties": {
+          "campaign": {"$ref": "#/components/schemas/Campaign"},
+          "message": {"type": "string"}
+        }
+      },
+      "CampaignDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "campaign": {
+            "allOf": [
+              {"$ref": "#/components/schemas/Campaign"},
+              {"type": "object", "properties": {"status": {"type": "string", "nullable": true}}}
+            ]
+          }
+        }
+      },
+      "DeleteCampaignsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "deletedCount": {"type": "integer"}
+        }
+      },
+      "DeleteCampaignResponse": {
+        "type": "object",
+        "properties": {
+          "message": {"type": "string"},
+          "campaignId": {"type": "string"},
+          "deletedRooms": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "PostCampaignRequest": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "assistantId": {"type": "string"},
+          "assistantName": {"type": "string"},
+          "description": {"type": "string"},
+          "isActive": {"type": "boolean", "default": true},
+          "earliestAt": {"type": "string", "format": "date-time"},
+          "latestAt": {"type": "string", "format": "date-time"},
+          "activeDays": {"type": "array", "items": {"type": "integer"}},
+          "phoneNumber": {"type": "string"},
+          "callRetries": {"type": "integer", "default": 0},
+          "webhookUrl": {"type": "string"},
+          "voicemailDetection": {"type": "boolean"},
+          "voicemailPrompt": {"type": "string"},
+          "voicemailMessage": {"type": "string"},
+          "maxConcurrency": {"type": "integer"},
+          "customers": {"type": "array", "items": {"$ref": "#/components/schemas/CampaignCustomer"}},
+          "phoneList": {"type": "array", "items": {"type": "string"}},
+          "workspaceId": {"type": "string"}
+        },
+        "required": ["name"]
       },
       "Error": {
         "type": "object",
