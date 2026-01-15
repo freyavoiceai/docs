@@ -354,8 +354,8 @@
     },
     "/audio/transcriptions": {
       "post": {
-        "summary": "Create transcription (Closed Beta)",
-        "description": "Transcribes an uploaded audio file using Freya's transcription models.",
+        "summary": "Create transcription",
+        "description": "Transcribes an uploaded audio file using Freya's transcription models. (Closed Beta)",
         "tags": ["Audio"],
         "requestBody": {
           "required": true,
@@ -382,8 +382,8 @@
     },
     "/audio/speech": {
       "post": {
-        "summary": "Create speech (Closed Beta)",
-        "description": "Generates speech audio from text using Freya's speech model.",
+        "summary": "Create speech",
+        "description": "Generates speech audio from text using Freya's speech model. (Closed Beta)",
         "tags": ["Audio"],
         "requestBody": {
           "required": true,
