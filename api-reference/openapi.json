@@ -351,6 +351,63 @@
         },
         "security": [{"bearerAuth": []}]
       }
+    },
+    "/audio/transcriptions": {
+      "post": {
+        "summary": "Create transcription (Closed Beta)",
+        "description": "Transcribes an uploaded audio file using Freya's transcription models.",
+        "tags": ["Audio"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {"$ref": "#/components/schemas/CreateTranscriptionRequest"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transcription created",
+            "content": {
+              "application/json": {"schema": {"$ref": "#/components/schemas/AudioTranscriptionResponse"}},
+              "text/plain": {"schema": {"type": "string"}}
+            }
+          },
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      }
+    },
+    "/audio/speech": {
+      "post": {
+        "summary": "Create speech (Closed Beta)",
+        "description": "Generates speech audio from text using Freya's speech model.",
+        "tags": ["Audio"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/CreateSpeechRequest"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Audio stream",
+            "content": {
+              "audio/mpeg": {"schema": {"type": "string", "format": "binary"}},
+              "audio/wav": {"schema": {"type": "string", "format": "binary"}},
+              "audio/ogg": {"schema": {"type": "string", "format": "binary"}}
+            }
+          },
+          "400": {"description": "Validation error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "401": {"description": "Missing or invalid token"},
+          "500": {"description": "Server error"}
+        },
+        "security": [{"bearerAuth": []}]
+      }
     }
   },
   "components": {
@@ -815,6 +872,60 @@
           "workspaceId": {"type": "string"}
         },
         "required": ["name"]
+      },
+      "CreateTranscriptionRequest": {
+        "type": "object",
+        "properties": {
+          "file": {"type": "string", "format": "binary", "description": "Audio file to transcribe"},
+          "model": {"type": "string", "description": "Freya transcription model", "enum": ["freya-transcribe-v1"], "default": "freya-transcribe-v1"},
+          "prompt": {"type": "string", "nullable": true, "description": "Optional context to guide the transcription"},
+          "response_format": {"type": "string", "enum": ["json", "text", "srt", "verbose_json", "vtt"], "default": "json"},
+          "language": {"type": "string", "nullable": true, "enum": ["tr", "cs"], "description": "Language hint (supported: tr, cs)"}
+        },
+        "required": ["file", "model"]
+      },
+      "TranscriptionSegment": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer"},
+          "start": {"type": "number", "description": "Start time in seconds"},
+          "end": {"type": "number", "description": "End time in seconds"},
+          "text": {"type": "string"}
+        }
+      },
+      "TranscriptionUsage": {
+        "type": "object",
+        "properties": {
+          "type": {"type": "string", "enum": ["tokens"], "description": "Usage accounting type"},
+          "input_tokens": {"type": "integer", "description": "Total input tokens"},
+          "input_token_details": {
+            "type": "object",
+            "properties": {
+              "text_tokens": {"type": "integer", "description": "Text token count"},
+              "audio_tokens": {"type": "integer", "description": "Audio token count"}
+            }
+          },
+          "output_tokens": {"type": "integer", "description": "Output token count"},
+          "total_tokens": {"type": "integer", "description": "Sum of input and output tokens"}
+        }
+      },
+      "AudioTranscriptionResponse": {
+        "type": "object",
+        "properties": {
+          "text": {"type": "string", "description": "Full transcription text"},
+          "usage": {"$ref": "#/components/schemas/TranscriptionUsage"}
+        },
+        "required": ["text", "usage"]
+      },
+      "CreateSpeechRequest": {
+        "type": "object",
+        "properties": {
+          "model": {"type": "string", "description": "Freya speech model", "enum": ["freya-audio-v1"], "default": "freya-audio-v1"},
+          "input": {"type": "string", "description": "Text to synthesize"},
+          "voice": {"type": "string", "enum": ["leyla"], "description": "Voice to use"},
+          "response_format": {"type": "string", "enum": ["wav"], "default": "wav"}
+        },
+        "required": ["model", "input", "voice"]
       },
       "Error": {
         "type": "object",
