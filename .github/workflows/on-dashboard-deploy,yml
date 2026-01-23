@@ -1,0 +1,15 @@
+name: Rebuild on Dashboard Deploy
+
+on:
+  repository_dispatch:
+    types: [dashboard-deployed]
+
+jobs:
+  trigger-rebuild:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.1
+      
+      - name: Log trigger
+        run: echo "Mintlify rebuild triggered by dashboard deploy"
