@@ -82,7 +82,7 @@
       },
       {
         "tab": "API reference",
-        "openapi": "https://app2.freyavoice.ai/api/openapi.json",
+        "openapi": "https://eu-app.freyavoice.ai/api/openapi.json",
         "groups": [
           {
             "group": "API documentation",
