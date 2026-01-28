@@ -3,7 +3,7 @@
   "info": {
     "title": "Freyavoice API",
     "version": "2.0.0",
-    "description": "Production endpoints for managing calls under /api/v2/call. All endpoints require a bearer token issued by Freyavoice.",
+    "description": "NOTE: This static file is not actively used. Mintlify automatically fetches the OpenAPI spec from https://app.freyavoice.ai/api/openapi.json as configured in docs.json. This file is kept for reference only.\n\nProduction endpoints for managing calls under /api/v2/call. All endpoints require a bearer token issued by Freyavoice.",
     "contact": {
       "name": "Freyavoice Support",
       "email": "support@freyavoice.com"
@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://app2.freyavoice.ai/api/v2",
+      "url": "https://app.freyavoice.ai/api/v2",
       "description": "Production"
     }
   ],

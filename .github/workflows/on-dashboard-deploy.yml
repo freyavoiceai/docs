@@ -10,6 +10,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Log trigger
-        run: echo "Mintlify rebuild triggered by dashboard deploy"
+      - name: Trigger Mintlify rebuild
+        run: |
+          echo "Dashboard commit: ${{ github.event.client_payload.sha }}" > .mintlify-trigger
+          echo "Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> .mintlify-trigger
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .mintlify-trigger
+          git diff --staged --quiet || git commit -m "chore: sync docs with dashboard ${{ github.event.client_payload.sha }}"
+          git push
