@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6.0.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.DEVOPS_PAT }}
       
       - name: Trigger Mintlify rebuild
         run: |
@@ -30,8 +30,8 @@ jobs:
           echo "Dashboard commit: ${SHA}" > .mintlify-trigger
           echo "Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> .mintlify-trigger
           
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "devops-freya"
+          git config user.email "devops-freya@users.noreply.github.com"
           git add .mintlify-trigger
           git diff --staged --quiet || git commit -m "chore: sync docs with dashboard ${SHA}"
           git push
