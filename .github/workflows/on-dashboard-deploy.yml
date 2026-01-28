@@ -1,6 +1,9 @@
 name: Rebuild on Dashboard Deploy
 
 on:
+  push:
+    branches:
+      - main
   repository_dispatch:
     types: [dashboard-deployed]
   workflow_dispatch:
@@ -14,8 +17,9 @@ permissions:
   contents: write
 
 jobs:
-  trigger-rebuild:
+  sync-and-rebuild:
     runs-on: ubuntu-24.04
+    if: github.actor != 'devops-freya'
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.1
@@ -23,9 +27,11 @@ jobs:
           token: ${{ secrets.DEVOPS_PAT }}
       
       - name: Sync OpenAPI from dashboard
+        if: github.event_name == 'repository_dispatch' || github.event_name == 'workflow_dispatch'
         run: |
           SHA="${{ github.event.client_payload.sha || github.event.inputs.sha || 'manual' }}"
           
+          echo "Fetching OpenAPI from app.freyavoice.ai..."
           curl -s --retry 3 --retry-delay 5 https://app.freyavoice.ai/api/openapi.json -o api-reference/openapi.json
           
           echo "Dashboard commit: ${SHA}" > .mintlify-trigger
@@ -36,3 +42,7 @@ jobs:
           git add api-reference/openapi.json .mintlify-trigger
           git diff --staged --quiet || git commit -m "chore: sync openapi from dashboard ${SHA}"
           git push
+      
+      - name: Trigger Mintlify rebuild (push event)
+        if: github.event_name == 'push'
+        run: echo "Push to main detected. Mintlify GitHub App will rebuild automatically."
