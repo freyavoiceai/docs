@@ -7,7 +7,7 @@
     "light": "#B8B8B6",
     "dark": "#010409"
   },
-  "favicon": "/favicon.ico",
+  "favicon": "/favicon-light.ico",
   "navigation": {
     "tabs": [
       {
@@ -104,8 +104,8 @@
     }
   },
   "logo": {
-    "light": "/freyavoice_cover.png",
-    "dark": "/freyavoice_cover.png"
+    "light": "/freya_logo_black.svg",
+    "dark": "/freya_logo_white.svg"
   },
   "navbar": {
     "links": [
