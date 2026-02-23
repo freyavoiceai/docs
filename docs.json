@@ -87,6 +87,7 @@
           {
             "group": "API documentation",
             "pages": [
+              "api-reference/authentication",
               "api-reference/introduction"
             ]
           }
@@ -94,7 +95,15 @@
       },
       {
         "tab": "Model APIs",
-        "openapi": "/api-reference/model-apis-openapi.json"
+        "openapi": "/api-reference/model-apis-openapi.json",
+        "groups": [
+          {
+            "group": "API documentation",
+            "pages": [
+              "api-reference/authentication"
+            ]
+          }
+        ]
       }
     ],
     "global": {
