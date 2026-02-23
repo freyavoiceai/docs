@@ -91,6 +91,19 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Model APIs",
+        "groups": [
+          {
+            "group": "Endpoints",
+            "openapi": "/api-reference/model-apis-openapi.json",
+            "pages": [
+              "api-reference/stt",
+              "api-reference/tts"
+            ]
+          }
+        ]
       }
     ],
     "global": {
