@@ -10,6 +10,20 @@
       "url": "https://stt.freyavoice.ai"
     }
   ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Bearer token issued by your workspace."
+      }
+    }
+  },
   "paths": {
     "/v1/audio/transcriptions": {
       "post": {
