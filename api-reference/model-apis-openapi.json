@@ -105,7 +105,7 @@
       "post": {
         "operationId": "createSpeech",
         "summary": "Text-to-Speech",
-        "description": "Converts text into natural-sounding speech using Freya's TTS model. Returns a binary audio file.",
+        "description": "Converts text into natural-sounding speech using Freya's TTS model. Returns a binary audio file. Supports the following emotion tags: [pause], [eee], [throat clearing], [mm-hmm], [laughter], [deep breath], [hmm], [cough], [breath]",
         "servers": [
           { "url": "https://tts.freyavoice.ai" }
         ],
