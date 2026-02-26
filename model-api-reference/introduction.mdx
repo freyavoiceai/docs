@@ -1,0 +1,53 @@
+---
+title: 'Introduction'
+description: 'Freya Model APIs for Speech-to-Text and Text-to-Speech'
+---
+
+## Overview
+
+The Freya Model APIs provide direct access to our Speech-to-Text (STT) and Text-to-Speech (TTS) models. These are standalone inference endpoints — separate from the platform Call API.
+
+| Model | Endpoint | Description |
+|---|---|---|
+| Speech-to-Text | `stt.freyavoice.ai` | Transcribe audio files to text |
+| Text-to-Speech | `tts.freyavoice.ai` | Convert text to natural-sounding speech |
+
+<Card
+  title="OpenAPI: Model API endpoints"
+  icon="microphone"
+  href="/api-reference/model-apis-openapi.json"
+>
+  Browse the full schema for STT and TTS endpoints.
+</Card>
+
+## Authentication
+
+All endpoints require a Bearer token issued by your workspace. See the [Authentication guide](/api-reference/authentication) for how to generate an API key.
+
+```bash
+Authorization: Bearer <your-api-key>
+```
+
+## Quick start
+
+### Speech-to-Text
+
+```bash
+curl -X POST "https://stt.freyavoice.ai/v1/audio/transcriptions" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -F "file=@audio.wav" \
+  -F "language=tr"
+```
+
+### Text-to-Speech
+
+```bash
+curl -X POST "https://tts.freyavoice.ai/v1/audio/speech" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"input": "Merhaba, Freya ile konuşuyorsunuz.", "voice": "leyla", "model": "tts-1"}'
+```
+
+<Note>
+  These Model APIs are independent of the Freyavoice Call API. They can be used standalone for any speech processing task, not just within Freya call workflows.
+</Note>
