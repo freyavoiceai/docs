@@ -95,7 +95,18 @@
       },
       {
         "tab": "Model APIs",
-        "openapi": "/api-reference/model-apis-openapi.json"
+        "openapi": {
+          "source": "/api-reference/model-apis-openapi.json",
+          "directory": "model-api-reference"
+        },
+        "groups": [
+          {
+            "group": "Model API documentation",
+            "pages": [
+              "model-api-reference/introduction"
+            ]
+          }
+        ]
       }
     ],
     "global": {
