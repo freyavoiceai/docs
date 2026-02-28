@@ -127,6 +127,12 @@
                     "enum": ["leyla", "zeynep", "alev", "ali", "alper", "mustafa"],
                     "description": "The voice ID to use."
                   },
+                  "response_format": {
+                    "type": "string",
+                    "default": "mp3",
+                    "enum": ["mp3", "opus", "aac", "flac", "wav", "pcm"],
+                    "description": "Response format for the API request."
+                  },
                   "model": {
                     "type": "string",
                     "default": "tts-1",
