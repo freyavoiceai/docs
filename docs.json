@@ -61,6 +61,7 @@
             "group": "Features",
             "pages": [
               "guides/features/ai-studio",
+              "guides/features/knowledgebase",
               "guides/features/simulations",
               "guides/features/analytics",
               "guides/features/campaigns",
