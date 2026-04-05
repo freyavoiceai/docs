@@ -44,7 +44,7 @@
                   "file": {
                     "type": "string",
                     "format": "binary",
-                    "description": "The audio file to transcribe. Supported formats: `wav`, `mp3`, `flac`, `ogg`, `m4a`, `webm`. Maximum size: 200 MB."
+                    "description": "The audio file to transcribe. Supported formats: `wav`, `mp3`, `flac`, `ogg`, `m4a`, `webm`. Maximum size: 15 MB."
                   },
                   "model": {
                     "type": "string",
