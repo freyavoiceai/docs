@@ -85,8 +85,10 @@ For real-time transcription, connect via WebSocket and stream audio frames. The 
 ### Connection
 
 ```
-wss://stt.freyavoice.ai/v1/audio/stream
+wss://stt.freyavoice.ai/v1/audio/stream?token=YOUR_API_KEY
 ```
+
+Pass your API key as the `token` query parameter. Non-browser clients can alternatively use the `Authorization: Bearer YOUR_API_KEY` header during the WebSocket handshake.
 
 ### Wire Protocol
 
@@ -165,7 +167,8 @@ The server re-transcribes the accumulated audio buffer on every tick (~500 ms). 
 ### JavaScript Example
 
 ```javascript
-const ws = new WebSocket("wss://stt.freyavoice.ai/v1/audio/stream");
+const token = "YOUR_API_KEY";
+const ws = new WebSocket(`wss://stt.freyavoice.ai/v1/audio/stream?token=${token}`);
 
 ws.onopen = () => {
   // 1. Send config
@@ -221,8 +224,10 @@ import json
 import wave
 import websockets
 
+API_KEY = "YOUR_API_KEY"
+
 async def transcribe_stream(audio_path: str):
-    uri = "wss://stt.freyavoice.ai/v1/audio/stream"
+    uri = f"wss://stt.freyavoice.ai/v1/audio/stream?token={API_KEY}"
 
     async with websockets.connect(uri) as ws:
         # 1. Configure
