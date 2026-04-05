@@ -104,7 +104,9 @@
           {
             "group": "Model API documentation",
             "pages": [
-              "model-api-reference/introduction"
+              "model-api-reference/introduction",
+              "api-reference/stt",
+              "api-reference/tts"
             ]
           }
         ]
