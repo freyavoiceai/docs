@@ -60,12 +60,9 @@
           {
             "group": "Features",
             "pages": [
-              "guides/features/ai-studio",
               "guides/features/knowledgebase",
-              "guides/features/simulations",
               "guides/features/analytics",
-              "guides/features/campaigns",
-              "guides/features/webhooks"
+              "guides/features/campaigns"
             ]
           },
           {
@@ -74,7 +71,7 @@
               "guides/telephony/overview",
               "guides/telephony/inbound-calls",
               "guides/telephony/outbound-calls",
-              "guides/telephony/phone-number-management",
+
               "guides/telephony/call-routing",
               "guides/telephony/voice-configuration"
             ]

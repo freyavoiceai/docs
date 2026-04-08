@@ -177,6 +177,33 @@ Inbound calls are calls that customers or users initiate to your phone numbers. 
 
 **Network Diagnostics**: Check network connectivity and quality.
 
+## Provider Setup Guides
+
+Once you've added a phone number to Freya and assigned an inbound agent, you need to configure your telephony provider to forward calls to Freya's SIP endpoint. The steps vary by provider — follow the guide for yours below.
+
+### Twilio
+
+Twilio is the most common provider used with Freya. Setup takes under a minute:
+
+1. Log in to the [Twilio Console](https://console.twilio.com) and navigate to **Phone Numbers** > **Manage** > **Active Numbers**
+2. Click the phone number you want to connect to Freya
+3. Scroll down to the **Voice Configuration** section
+4. Under **"A call comes in"**, set the dropdown to **Webhook** and paste the following URL:
+
+```
+https://agents-eu1.freyavoice.ai/telephony/inbound/webhook
+```
+
+5. Make sure the method is set to **HTTP POST**
+6. Click **Save configuration**
+
+<Frame caption="Twilio Voice Configuration — paste the Freya webhook URL in the 'A call comes in' field and set the method to HTTP POST.">
+  <img src="/images/twilio_voice_config.png" alt="Twilio Voice Configuration showing the Freya inbound webhook URL" />
+</Frame>
+
+That's it. Every call to this Twilio number will now be forwarded to Freya, which routes it to the inbound agent you've configured on the [Phone Numbers](/guides/fundamentals/phone-numbers) page.
+
+
 ## Next Steps
 
 <Card

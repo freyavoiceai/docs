@@ -1,211 +1,138 @@
 ---
 title: "Campaigns"
-description: "Creating and managing outbound calling campaigns for sales, marketing, and outreach"
+description: "Launch outbound calling campaigns to reach customers at scale — with scheduling, retries, and real-time progress tracking"
 ---
 
-## Campaign Overview
+## What are Campaigns?
 
-Campaigns enable you to orchestrate large-scale outbound calling operations. Whether you're conducting sales outreach, customer surveys, appointment reminders, or marketing campaigns, the campaign system helps you manage contacts, schedule calls, track progress, and measure results.
+Campaigns let you make outbound calls to a list of customers automatically. You provide the phone numbers, choose which agent handles the conversation, set a schedule, and Freya works through the list — calling each customer, handling retries for failed attempts, and tracking progress in real time.
 
-## Campaign Types
+Common use cases include appointment reminders, payment follow-ups, customer surveys, sales outreach, and service notifications.
 
-### Sales Campaigns
+## Campaign Lifecycle
 
-**Lead Outreach**: Reach out to potential customers with personalized sales messages.
+Every campaign moves through a series of statuses as it progresses:
 
-**Follow-Up Calls**: Follow up with leads who have shown interest but haven't converted.
+| Status | Meaning |
+|--------|---------|
+| **Draft** | Campaign is created but hasn't started yet. You can still edit everything. |
+| **Scheduled** | Campaign is configured with a future start date and waiting to begin. |
+| **Active** | Campaign is currently making calls. |
+| **Completed** | All customers have been called and all retries exhausted. |
+| **Partially Completed** | Some calls failed and retries are exhausted, but not all customers were reached. You can retry these. |
 
-**Upsell/Cross-Sell**: Contact existing customers with additional product or service offers.
+## Creating a Campaign
 
-**Win-Back**: Re-engage customers who haven't purchased recently.
+### 1. Name and Description
 
-### Marketing Campaigns
+Give your campaign a clear name so you can identify it later in the list. The name defaults to today's date, but you should use something descriptive — like "April Payment Reminders" or "Product Launch Outreach". The description is optional but helpful for team context.
 
-**Product Launches**: Announce new products or features to your customer base.
+### 2. Select a Phone Number
 
-**Event Promotion**: Promote events, webinars, or special offers.
+Choose which phone number Freya will call from. The dropdown only shows numbers that have **outbound SIP enabled** and an **agent or workflow configured** — if your number doesn't appear, check its configuration on the Phone Numbers page.
 
-**Newsletter Calls**: Deliver marketing messages via voice calls.
+The phone number you pick determines which agent is pre-selected in the next step, based on the outbound agent configured for that number.
 
-**Brand Awareness**: Build brand awareness through outreach campaigns.
+### 3. Choose an Agent
 
-### Service Campaigns
+Select the agent that will handle conversations during the campaign. This is auto-populated from the phone number's outbound agent, but you can change it.
 
-**Appointment Reminders**: Remind customers of upcoming appointments.
+If your agent uses **variables** in its system prompt (like `{{customer_name}}` or `{{appointment_date}}`), those variables appear as columns in the customer table so you can provide personalized data for each call.
 
-**Payment Reminders**: Follow up on overdue payments or invoices.
+### 4. Add Customers
 
-**Customer Surveys**: Conduct surveys to gather feedback and insights.
+The customer table is where you enter the phone numbers to call. Each row represents one customer:
 
-**Service Updates**: Notify customers about service changes or updates.
+- **Phone number** (required) — the number to dial, in any common format
+- **Custom properties** — additional columns appear automatically based on variables detected in your agent's prompt
 
-## Creating Campaigns
+Freya normalizes all phone numbers to **E.164 format** automatically. Use the country picker to set a default country code for numbers entered without one — for example, if you enter "555-1234" with the US country selected, it becomes "+15551234".
 
-### Campaign Configuration
+<Tip>
+  The system validates for duplicates and empty numbers before you can start the campaign. If two rows have the same phone number, you'll be prompted to fix it.
+</Tip>
 
-**Name and Description**: Give your campaign a clear, descriptive name and optional description.
+### 5. Configure the Schedule
 
-**Phone Number**: Select which phone number to use for outbound calls.
+By default, campaigns start calling immediately. To schedule calls for later:
 
-**Agent or Workflow**: Choose which agent or workflow will handle the calls.
+- **Start Date** — the first day calls will be made
+- **Start Time / End Time** — the daily calling window (e.g., 9:00 AM to 6:00 PM)
+- **Active Days** — which days of the week calls can happen (all seven enabled by default)
+- **Timezone** — auto-detected from your browser, used for all schedule calculations
 
-**Contact List**: Upload or enter the list of phone numbers to call.
+The summary at the bottom of the form shows exactly when calling will begin — either "Starting immediately" or "Starting on [date] at [time]".
 
-### Scheduling
+### 6. Set Up Retries
 
-**Start Time**: Set when the campaign should begin.
+If a call fails (busy signal, no answer, network error), Freya can automatically retry:
 
-**Call Rate**: Configure how many calls to make per hour to control pacing.
+- **Call Retries** — number of retry attempts per customer (0–10, default 0)
+- **Retry Delay** — seconds to wait between attempts (default 300 seconds / 5 minutes)
+- **Retry Conditions** — which call outcomes trigger a retry (specific SIP codes and end reasons)
 
-**Time Windows**: Define when calls can be made (e.g., business hours only).
+Retries respect the active days and calling window — they won't happen outside your configured schedule.
 
-**Timezone**: Set the timezone for scheduling and time-based rules.
+### 7. Webhook (Optional)
 
-### Advanced Settings
+Under **Advanced Settings**, you can provide a webhook URL that receives a callback for each call as it completes. This is useful for updating external CRMs or triggering follow-up workflows in other systems.
 
-**Retry Logic**: Configure how to handle failed calls (retry attempts, delays, etc.).
+### 8. Review and Start
 
-**Call Timeout**: Set maximum call duration.
+The form shows a summary of your configuration — how many calls are queued, when they'll start, and the calling window. Click **Start Campaign** and confirm in the dialog to begin.
 
-**Do-Not-Call List**: Exclude numbers from your do-not-call list.
+## Managing Campaigns
 
-**Compliance Settings**: Configure compliance-related settings for your region.
+### The Campaign List
 
-## Campaign Management
+The campaigns page shows all your campaigns in a table with:
 
-### Monitoring
+- **Campaign name** and description
+- **Status** badge (Draft, Active, Scheduled, Completed, Partially Completed)
+- **Phone Numbers** — the number of customers in the campaign
+- **Created date**
 
-**Real-Time Dashboard**: Monitor campaign progress in real-time with live metrics.
+Use the status filter buttons above the table to quickly narrow down to campaigns in a specific state.
 
-**Call Status**: Track which calls have been completed, failed, or are in progress.
+### Campaign Actions
 
-**Success Metrics**: Monitor conversion rates, goal achievement, and other success metrics.
+Right-click a campaign or use the actions menu to:
 
-**Error Tracking**: Identify and track errors or issues during campaign execution.
+- **Duplicate** — create a copy of an existing campaign with the same configuration, useful for running similar campaigns with different customer lists
+- **Retry** — available for Partially Completed campaigns, re-queues the customers that weren't successfully reached
+- **Delete** — permanently remove a campaign (with confirmation)
+- **Export to CSV** — download campaign data for reporting or external analysis
 
-### Optimization
+You can also select multiple campaigns using the checkboxes for **bulk delete** operations.
 
-**Adjust Call Rate**: Modify call rate based on performance and capacity.
+### Quick Campaign
 
-**Update Contact List**: Add or remove contacts from the active campaign.
+For simple campaigns that don't need detailed scheduling, the **Quick Campaign** option opens a streamlined modal where you can set up and launch a campaign in seconds — just pick a number, add customers, and go.
 
-**Pause/Resume**: Pause campaigns for adjustments, then resume when ready.
+## Best Practices
 
-**A/B Testing**: Run multiple campaign variants to test different approaches.
-
-### Results Analysis
-
-**Completion Reports**: Analyze which calls completed successfully.
-
-**Conversion Analysis**: Track conversions and identify what works best.
-
-**Cost Analysis**: Review costs and optimize for better ROI.
-
-**Performance Trends**: Identify trends and patterns in campaign performance.
-
-## Campaign Best Practices
-
-### Planning
-
-**Define Goals**: Clearly define what you want to achieve with each campaign.
-
-**Target Audience**: Carefully select your target audience to maximize relevance and response rates.
-
-**Message Design**: Craft messages that are clear, compelling, and compliant.
-
-**Timing**: Choose optimal times to call based on your audience and goals.
-
-### Execution
-
-**Start Small**: Begin with a small test group before scaling up.
-
-**Monitor Closely**: Watch the first calls closely to catch issues early.
-
-**Adjust Quickly**: Be ready to adjust based on early results.
-
-**Scale Gradually**: Increase scale as you gain confidence and optimize.
-
-### Compliance
-
-**Obtain Consent**: Ensure you have proper consent before making calls.
-
-**Respect Preferences**: Honor opt-out requests immediately.
-
-**Follow Regulations**: Comply with all applicable telephony regulations (TCPA, GDPR, etc.).
-
-**Maintain Records**: Keep records of consent and compliance measures.
-
-**Do-Not-Call Lists**: Maintain and respect do-not-call lists.
-
-### Optimization
-
-**Test Messages**: Test different messages to find what works best.
-
-**Optimize Timing**: Find the best times to call your audience.
-
-**Improve Targeting**: Refine your target audience based on results.
-
-**Iterate**: Continuously improve campaigns based on data and feedback.
-
-## Campaign Analytics
-
-### Key Metrics
-
-**Call Volume**: Total calls made, attempted, and completed.
-
-**Connection Rate**: Percentage of calls that connect successfully.
-
-**Completion Rate**: Percentage of calls that complete without dropping.
-
-**Conversion Rate**: Percentage of calls that achieve campaign goals.
-
-**Cost per Call**: Average cost per call including telephony and AI costs.
-
-**ROI**: Return on investment for the campaign.
-
-### Reporting
-
-**Daily Reports**: Get daily summaries of campaign performance.
-
-**Real-Time Metrics**: Monitor live metrics during campaign execution.
-
-**Detailed Logs**: Access detailed logs for individual calls.
-
-**Export Data**: Export campaign data for analysis in external tools.
-
-## Advanced Features
-
-### Dynamic Routing
-
-**Conditional Routing**: Route calls to different agents based on contact data or responses.
-
-**Multi-Agent Campaigns**: Use multiple agents for different segments or scenarios.
-
-**Workflow Integration**: Integrate workflows for complex campaign logic.
-
-### Personalization
-
-**Contact Data**: Use contact data to personalize conversations.
-
-**Variable Substitution**: Insert contact information into agent prompts.
-
-**Dynamic Content**: Adjust conversation flow based on contact characteristics.
-
-### Automation
-
-**Scheduled Campaigns**: Schedule campaigns to run automatically at specific times.
-
-**Triggered Campaigns**: Trigger campaigns based on events or conditions.
-
-**Recurring Campaigns**: Set up campaigns to repeat on a schedule.
+- **Name campaigns descriptively.** You'll accumulate campaigns over time. Names like "2026-04 Appointment Reminders - Dental" are much easier to find than "Campaign 47".
+- **Test with a small list first.** Before launching a campaign to hundreds of customers, run it with 2–3 test numbers to verify the agent handles the conversation correctly and the variables are populated as expected.
+- **Set reasonable calling windows.** Nobody wants a robot call at 7 AM. Configure start and end times that respect your customers' time zones and local regulations.
+- **Use retries sparingly.** One or two retries with a 5-minute delay is usually enough. Excessive retries can annoy customers and waste resources.
+- **Check your phone number configuration.** If a number doesn't appear in the dropdown, it's missing outbound SIP or an assigned agent. Fix it on the Phone Numbers page first.
+- **Use the webhook for CRM integration.** If you track call outcomes in an external system, configure the webhook URL so each completed call automatically updates your records.
 
 ## Next Steps
 
-<Card
-  title="Webhooks"
-  icon="webhook"
-  href="/guides/features/webhooks"
->
-  Learn how to use webhooks for real-time event notifications and integrations.
-</Card>
-
+<CardGroup cols={2}>
+  <Card
+    title="Phone Numbers"
+    icon="phone"
+    href="/guides/fundamentals/phone-numbers"
+  >
+    Configure phone numbers with outbound SIP and agents so they're available for campaigns.
+  </Card>
+  <Card
+    title="Analytics"
+    icon="chart-line"
+    href="/guides/features/analytics"
+  >
+    Track campaign call performance, sentiment, and outcomes in the Analytics dashboard.
+  </Card>
+</CardGroup>

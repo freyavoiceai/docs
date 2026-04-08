@@ -1,169 +1,126 @@
 ---
 title: "Analytics"
-description: "Tracking and analyzing call performance, agent metrics, and business insights"
+description: "Track call performance, visualize trends, and build custom dashboards with structured data widgets"
 ---
 
-## Analytics Overview
+## What is Analytics?
 
-Freyavoice AI provides comprehensive analytics to help you understand call performance, agent effectiveness, user satisfaction, and business metrics. These insights enable data-driven decisions and continuous improvement.
+The Analytics page is your central hub for understanding how your voice agents are performing. It gives you a real-time view of call volume, duration, sentiment, outcomes, and conversation themes — all filterable by date range, call type, and phone number.
 
-## Key Metrics
+Beyond the built-in call metrics, you can create custom widgets that visualize structured data collected during calls, letting you track the business-specific metrics that matter most to your team.
 
-### Call Metrics
+## The Two Tabs
 
-**Call Volume**: Total number of calls, calls per day/hour, and trends over time. This helps you understand usage patterns and plan capacity.
+Analytics is split into two views, each serving a different purpose:
 
-**Call Duration**: Average call length, total talk time, and duration distributions. Longer calls might indicate complexity or inefficiency.
+| Tab | Purpose |
+|-----|---------|
+| **Calls** | Pre-built charts for call volume, duration, status breakdown, and detected themes |
+| **Structured Data** | Custom widgets you build yourself, powered by the structured data your agents collect during calls |
 
-**Call Success Rate**: Percentage of calls that complete successfully versus those that fail or drop. High success rates indicate good system health.
+Switch between them using the tab bar at the top of the page. Filters like date range and call type are shared across both tabs.
 
-**Call Quality**: Audio quality metrics, connection stability, and technical performance indicators.
+## Calls Tab
 
-### Agent Performance
+The Calls tab gives you three metric cards, a status breakdown, and a theme map — all updating in real time as new calls come in.
 
-**Response Quality**: Analysis of agent responses for clarity, accuracy, and helpfulness. This helps identify areas for prompt improvement.
+### Metric Cards
 
-**Goal Achievement**: Percentage of calls where agents successfully achieve their goals (sales, support resolution, etc.).
+Three interactive cards sit at the top of the page. Click any card to select it and see its trend chart below:
 
-**Function Usage**: Which functions are called most often and how effectively they're used.
+**Total Calls** shows the number of calls in the selected period, with a percentage change compared to the previous equivalent period. When selected, the chart below breaks down calls by **caller sentiment** — Very Happy, Happy, Neutral, Unhappy, Very Unhappy, and Untagged — displayed as a stacked stream chart so you can see how sentiment shifts over time.
 
-**Context Management**: How well agents maintain context throughout conversations.
+**Average Duration** displays the mean call length in MM:SS format with a trend line chart. This helps you spot whether calls are getting longer (potentially more complex issues) or shorter (potentially more efficient handling).
 
-### User Satisfaction
+**Total Talk Time** shows cumulative minutes across all calls. This is useful for capacity planning and understanding overall agent utilization.
 
-**Sentiment Analysis**: Analysis of caller sentiment throughout conversations. Positive sentiment indicates good experiences.
+Each card includes a percentage indicator showing the change from the previous period, so you can tell at a glance whether a metric is trending up or down.
 
-**Resolution Rate**: Percentage of calls where user issues are resolved or goals are achieved.
+### Call Status Breakdown
 
-**User Feedback**: Direct feedback from users about their experience (if collected).
+A pie chart shows how calls ended — Connected, Abandoned, Failed, Voicemail, and other outcomes. Each slice displays its percentage (hidden for slices under 5% to keep the chart readable), and a legend below shows the exact count for each status.
 
-**Repeat Call Rate**: How often users call back, which might indicate unresolved issues.
+This is the fastest way to spot problems. If your "Failed" or "Abandoned" slice suddenly grows, something needs attention — maybe a provider issue, a misconfigured agent, or an unexpected spike in traffic.
 
-### Business Metrics
+### Call Themes
 
-**Cost per Call**: Total cost divided by number of calls. Helps optimize spending.
+A treemap visualization shows the top 15 conversation themes detected across your calls. Larger blocks represent more frequently occurring themes, giving you an instant read on what callers are asking about most.
 
-**Conversion Rate**: For sales or lead generation, the percentage of calls that result in conversions.
+If no themes have been detected yet, the card displays a "No themes detected" message. Themes are generated automatically from call transcripts.
 
-**Average Handle Time**: How long it takes to handle each call. Lower times can indicate efficiency.
+## Structured Data Tab
 
-**First Call Resolution**: Percentage of issues resolved on the first call without follow-up.
+The Structured Data tab is a blank canvas where workspace admins can build custom widgets that visualize the data agents collect during calls — things like customer satisfaction ratings, deal values, issue categories, or any other structured field you've defined in **Insights**.
 
-## Analytics Dashboard
+### Creating a Widget
 
-### Overview Dashboard
+1. Click the **Add Widget** button in the filter bar (visible to admins only)
+2. Give the widget a **name** and optional **description**
+3. Select the **structured data source** — this is the Insight definition your agents report against
+4. Choose a **chart type** based on your data:
 
-**High-Level Metrics**: Key performance indicators at a glance.
+| Chart Type | Best For | Field Types |
+|------------|----------|-------------|
+| **Area** | Trends over time (averages) | Numeric only |
+| **Stream** | Composition changes over time | Numeric only |
+| **Stacked Bar** | Comparing categories across periods | Numeric only |
+| **Radar** | Multi-dimensional comparison | Numeric only |
+| **Pie** | Proportional breakdown | All types |
+| **Donut** | Same as pie with a cleaner look | All types |
+| **Treemap** | Hierarchical volume comparison | All types |
 
-**Trends**: Visualizations showing how metrics change over time.
+5. For charts that support it (Area, Stacked Bar, Stream, Radar), you can enable **multi-field selection** to plot several numeric fields on the same chart
+6. Optionally filter by specific **agents** if you only want data from certain agents
+7. Pick a **color theme** — Ocean, Purple, Forest, Sunset, or Rainbow
+8. Set a **default date range** for the widget, or leave it to follow the global filter
 
-**Comparisons**: Compare performance across different time periods, agents, or workflows.
+### Managing Widgets
 
-**Alerts**: Notifications for important changes or anomalies.
+Once created, widgets appear as cards on the Structured Data tab. You can:
 
-### Detailed Reports
+- **Drag and drop** widgets to reorder them into rows
+- **Edit** any widget to change its chart type, data source, or filters
+- **Delete** widgets you no longer need
 
-**Call Reports**: Detailed breakdowns of individual calls with transcripts, recordings, and metadata.
+Each widget can have its own date range preset. When a widget uses a custom range instead of the global filter, a label appears showing which preset is active — so you always know what time window you're looking at.
 
-**Agent Reports**: Performance analysis for specific agents including strengths and areas for improvement.
+<Note>
+  Only workspace admins (owners and members with the admin role) can create, edit, or delete widgets. All other members can view them.
+</Note>
 
-**Workflow Reports**: Analysis of workflow execution including path taken, node performance, and bottlenecks.
+## Shared Filters
 
-**Cost Reports**: Detailed cost breakdowns by workspace, agent, or time period.
+Both tabs share a filter bar with the following controls:
 
-## Using Analytics
-
-### Performance Monitoring
-
-**Track KPIs**: Monitor key performance indicators regularly to ensure goals are being met.
-
-**Identify Trends**: Look for trends in metrics that might indicate issues or opportunities.
-
-**Compare Periods**: Compare current performance to previous periods to measure improvement.
-
-**Set Alerts**: Configure alerts for important metrics to catch issues early.
-
-### Optimization
-
-**Identify Bottlenecks**: Use analytics to find performance bottlenecks and optimization opportunities.
-
-**Improve Agents**: Use performance data to identify which agents need improvement and how.
-
-**Optimize Workflows**: Analyze workflow execution to find inefficiencies and optimization opportunities.
-
-**Cost Optimization**: Identify cost drivers and optimize spending without sacrificing quality.
-
-### Business Intelligence
-
-**Understand Users**: Analyze call patterns to better understand your users and their needs.
-
-**Product Insights**: Use conversation data to gain insights about your products or services.
-
-**Market Research**: Analyze call topics and trends to understand market needs.
-
-**Strategic Planning**: Use analytics data to inform strategic decisions and planning.
-
-## Advanced Analytics
-
-### Custom Reports
-
-**Build Reports**: Create custom reports with the metrics and visualizations you need.
-
-**Schedule Reports**: Automatically generate and deliver reports on a schedule.
-
-**Export Data**: Export data for analysis in external tools.
-
-### Data Integration
-
-**API Access**: Access analytics data programmatically via API.
-
-**Webhook Events**: Receive analytics events via webhooks for real-time processing.
-
-**Data Warehouse**: Integrate with data warehouses for advanced analysis.
-
-### Predictive Analytics
-
-**Forecasting**: Predict future call volumes and resource needs.
-
-**Trend Analysis**: Identify emerging trends before they become obvious.
-
-**Anomaly Detection**: Automatically detect unusual patterns that might indicate issues.
+- **Date Range** — Preset options like "Last 7 Days", "Last 30 Days", or a custom range. The system automatically picks an appropriate granularity (hourly, daily, weekly, monthly) based on the range you select.
+- **View Mode** — Toggle between **Regular** and **Cumulative** to see values per-period or as a running total. Cumulative mode is useful for tracking progress toward targets.
+- **Call Type** — Multi-select filter for inbound, outbound, and other call types. Shows "All Call Types" when nothing is selected, or a count like "2 selected" when filtered.
+- **Phone Number** — Filter to a specific phone number to isolate its performance.
+- **Refresh** — Manually reload the data if you want the latest numbers without waiting for the auto-refresh cycle.
 
 ## Best Practices
 
-### Regular Review
-
-**Daily Monitoring**: Check key metrics daily to catch issues early.
-
-**Weekly Analysis**: Perform deeper analysis weekly to identify trends and opportunities.
-
-**Monthly Reviews**: Conduct comprehensive monthly reviews to assess overall performance.
-
-### Actionable Insights
-
-**Focus on Action**: Don't just collect data - use it to make decisions and take action.
-
-**Prioritize**: Focus on metrics that matter most to your business goals.
-
-**Experiment**: Use analytics to guide experiments and A/B tests.
-
-**Iterate**: Continuously improve based on analytics insights.
-
-### Data Quality
-
-**Ensure Accuracy**: Verify that analytics data is accurate and complete.
-
-**Understand Metrics**: Make sure you understand what each metric means and how it's calculated.
-
-**Context Matters**: Consider context when interpreting metrics. A low metric might be good or bad depending on context.
+- **Start with the Calls tab for daily health checks.** The three metric cards and status pie give you an instant pulse on system health. Make it a habit to check these at the start of each day.
+- **Use the themes treemap to inform agent training.** If you notice a theme appearing frequently that your agents aren't handling well, update the agent's system prompt or add relevant content to the Knowledgebase.
+- **Build Structured Data widgets for business KPIs.** The Calls tab tells you about call operations; the Structured Data tab tells you about business outcomes. Create widgets for the metrics your stakeholders care about — conversion rates, satisfaction scores, issue resolution.
+- **Set widget-specific date ranges for dashboards.** If you have a widget tracking weekly targets, set it to "This Week" so it always shows current progress regardless of the global date filter.
+- **Filter by phone number to compare lines.** If you have different numbers for different purposes (support vs. sales), filter by number to compare performance across lines.
 
 ## Next Steps
 
-<Card
-  title="Campaigns"
-  icon="megaphone"
-  href="/guides/features/campaigns"
->
-  Learn how to create and manage outbound calling campaigns.
-</Card>
-
+<CardGroup cols={2}>
+  <Card
+    title="Insights"
+    icon="chart-mixed"
+    href="/guides/fundamentals/agents"
+  >
+    Define structured data fields that your agents collect during calls — the data that powers Structured Data widgets.
+  </Card>
+  <Card
+    title="Campaigns"
+    icon="megaphone"
+    href="/guides/features/campaigns"
+  >
+    Launch outbound calling campaigns and track their performance in Analytics.
+  </Card>
+</CardGroup>

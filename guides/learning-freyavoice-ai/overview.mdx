@@ -1,77 +1,62 @@
 ---
-title: "Learning Freyavoice AI - Overview"
-description: "Comprehensive guide to understanding and mastering Freyavoice AI platform"
+title: "Learning Freyavoice AI"
+description: "A guided path through the platform — from core concepts to architecture to production best practices"
 ---
 
-## Introduction to Freyavoice AI
+## Who This Section Is For
 
-Freyavoice AI is a comprehensive voice AI platform designed to help you build, deploy, and manage intelligent voice agents and workflows. This learning path will guide you through understanding the platform's architecture, core concepts, and best practices for building production-ready voice AI solutions.
+Whether you're evaluating Freyavoice AI for the first time or preparing to deploy agents in production, this learning path gives you a structured understanding of how the platform works and how to get the most out of it.
+
+If you've already completed the [Getting Started](/getting-started/creating-workspace) guide and built your first agent, this section takes you deeper — explaining the architectural decisions behind the platform, the mental models that make agent design intuitive, and the patterns that separate a prototype from a production-ready deployment.
 
 ## What You'll Learn
 
-This learning section covers everything you need to become proficient with Freyavoice AI:
+The learning path is organized into three sections, each building on the previous one:
 
-- **Platform Architecture**: Understanding how Freyavoice AI works under the hood
-- **Core Concepts**: Deep dive into agents, workflows, and telephony systems
-- **Best Practices**: Proven patterns and strategies for building effective voice AI solutions
-- **Advanced Techniques**: Optimization, scaling, and troubleshooting
+### Core Concepts
+
+Start here. This section covers the three building blocks of every Freyavoice AI deployment: **agents**, **workflows**, and the **telephony layer**. You'll understand how an agent's lifecycle works from the moment a call connects to the moment it ends, how workflows chain multiple agents and decision points together, and how the telephony system bridges your AI to the phone network.
+
+### Architecture
+
+Once you understand the concepts, this section explains how they're implemented. You'll learn about Freyavoice AI's layered architecture — from the API and application layers down to the telephony and data infrastructure. This is especially useful if you need to reason about latency, scaling, security, or integration design.
+
+### Best Practices
+
+The final section distills practical lessons into actionable guidance. It covers agent prompt design, workflow structure, telephony optimization, integration patterns, monitoring strategies, and deployment workflows. These are the patterns that teams discover after months of iteration — laid out so you can apply them from day one.
 
 ## Learning Path
 
-<CardGroup cols={2}>
+<CardGroup cols={3}>
   <Card
     title="Core Concepts"
     icon="lightbulb"
     href="/guides/learning-freyavoice-ai/core-concepts"
   >
-    Understand the fundamental building blocks of Freyavoice AI including agents, workflows, and the telephony layer.
+    Agents, workflows, and telephony — the three pillars of the platform.
   </Card>
   <Card
     title="Architecture"
     icon="sitemap"
     href="/guides/learning-freyavoice-ai/architecture"
   >
-    Learn how Freyavoice AI's architecture enables scalable, reliable voice AI applications.
+    How the system is structured for scalability, reliability, and low latency.
   </Card>
   <Card
     title="Best Practices"
     icon="star"
     href="/guides/learning-freyavoice-ai/best-practices"
   >
-    Discover proven patterns and strategies for building effective voice AI solutions.
+    Proven patterns for agent design, workflows, testing, and deployment.
   </Card>
 </CardGroup>
 
 ## Prerequisites
 
-Before diving into this learning path, you should:
+Before starting this path, you should:
 
-- Have completed the [Getting Started](/getting-started/creating-workspace) section
-- Understand basic concepts of AI and machine learning
-- Be familiar with REST APIs and webhooks
-- Have experience with voice applications (helpful but not required)
+- Have a Freya workspace set up ([create one here](/getting-started/creating-workspace))
+- Have created at least one agent and made a test call
+- Be comfortable with the basics of REST APIs and webhooks
 
-## Getting the Most Out of This Guide
-
-<Tip>
-  Follow the learning path in order. Each section builds on concepts from previous sections.
-</Tip>
-
-<Tip>
-  Try the examples and exercises as you go. Hands-on practice is essential for mastering Freyavoice AI.
-</Tip>
-
-<Tip>
-  Bookmark sections you find particularly useful. You'll likely reference them as you build your applications.
-</Tip>
-
-## Next Steps
-
-<Card
-  title="Core Concepts"
-  icon="arrow-right"
-  href="/guides/learning-freyavoice-ai/core-concepts"
->
-  Start your learning journey by understanding the core concepts that power Freyavoice AI.
-</Card>
-
+Prior experience with voice applications or AI is helpful but not required — the Core Concepts section explains everything from the ground up.
